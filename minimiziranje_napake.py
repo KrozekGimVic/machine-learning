@@ -13,17 +13,27 @@ data = [[float(i.split()[0]), float(i.split()[1])] for i in data]
 # print(c)
 
 def gradientni_spust(data, a, b, grad_a, grad_b, step):
-    a -= step * grad_a(a, b, data)
-    b -= step * grad_b(a, b, data)
+    a -= grad_a(a, b, data, step)
+    b -= grad_b(a, b, data, step)
     return a, b
 
-grad_a = lambda a, b, l: sum([-x * (y - a * x - b) for x, y in l])
-grad_b = lambda a, b, l: sum([-(y - a * x - b) for x, y in l])
+def grad_a(a, b, l, step):
+    s = 0
+    for x, y in l:
+        s += (-x * (y - a * x - b)) * step
+    return s
+
+def grad_b(a, b, l, step):
+    s = 0
+    for x, y in l:
+        s += -(y - a * x - b) * step
+    return s
 
 a, b = 0, 0
 for i in range(50000):
     a, b = gradientni_spust(data, a, b, grad_a, grad_b, 5e-8)
     if i % 100 == 0: print(a, b)
 print(a, b)
+
 #-1.2984640721985186 2.190221283340356
 
