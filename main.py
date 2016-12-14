@@ -1,5 +1,4 @@
 import numpy as np
-import random
 
 
 def read(filename):
@@ -33,7 +32,7 @@ def gama(a):
 
 step = 1e-9
 p = 28**2
-N = 20
+N = 100
 train_n = 200
 
 b = np.array([1.0 for _ in range(10)])
@@ -63,5 +62,5 @@ z = [softmax(W, x, b) for digit, x in data]
 correct = 0
 for i in range(len(z)):
     correct += np.argmax(z[i]) == digits[i]
-    print('Predicted:', np.argmax(z[i]), '\tReal:', digits[i], '\tCorrect:', np.argmax(z[i]) == digits[i])
+    print('Predicted:', np.argmax(z[i]), '\tReal:', int(digits[i]), '\tCorrect:', np.argmax(z[i]) == digits[i])
 print('Success rate: {:.1f}%'.format(100*correct/len(z)))
