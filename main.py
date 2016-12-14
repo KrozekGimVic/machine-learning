@@ -10,8 +10,8 @@ def read(filename):
             if line[:5] != "label":
                 label, *values = [float(i) for i in line.split(",")]
                 result.append((label, values))
-                if counter > 10: return result
                 counter += 1
+                if counter >= N: return result
     return result
 
 
@@ -20,7 +20,7 @@ def softmax(W, slika, b):
     asdf = np.add(v, b)
     asdf *= step
     vsota = gama(asdf)
-    return np.divide(asdf, vsota)
+    return np.divide(np.exp(asdf), vsota)
 
 
 def delta(a, b):
@@ -31,33 +31,37 @@ def gama(a):
     return sum(np.exp(a))
 
 
-step = 0.0001
-b = np.array([random.random() for _ in range(10)])
-W = np.array([[random.random() for __ in range(784)] for _ in range(10)])
+step = 1e-9
 p = 28**2
-N = 10
+N = 20
+train_n = 200
+
+b = np.array([1.0 for _ in range(10)])
+W = np.array([[1.0 for __ in range(p)] for _ in range(10)])
 
 z = []
 data = read("train.csv")
 
 digits = [i[0] for i in data]
 
-for _ in range(100):
-    z = [-softmax(W, x, b) for digit, x in data]
+for _ in range(train_n):
+    print('\rTraining [' + '#' * (20*_//train_n) + '-' * (20-20*_//train_n) + '] {}% '.format(100*_//train_n), end='')
+    z = [softmax(W, x, b) for __, x in data]
     for i in range(len(z)):
         b += z[i]*step
 
     max_index = [np.argmax(i) for i in z]
-    print(b)
     for j in range(N):
-        vsota = 0
         for i in range(10):
             for k in range(p):
-                W[i][k] += (delta(max_index[i], digits[i]) - z[i][max_index[i]]) * data[j][1][k]
-            b[i] += delta(max_index[i], digits[i]) - z[i][max_index[i]]
+                W[i][k] += (delta(i, digits[j]) - z[j][max_index[j]]) * data[j][1][k]
+            b[i] += delta(i, digits[j]) - z[j][max_index[j]]
 
+print()
 
-
-z = [-softmax(W, x, b) for digit, x in data]
+z = [softmax(W, x, b) for digit, x in data]
+correct = 0
 for i in range(len(z)):
-    print(digits[i], np.argmax(z[i]), z[i])
+    correct += np.argmax(z[i]) == digits[i]
+    print('Predicted:', np.argmax(z[i]), '\tReal:', digits[i], '\tCorrect:', np.argmax(z[i]) == digits[i])
+print('Success rate: {:.1f}%'.format(100*correct/len(z)))
