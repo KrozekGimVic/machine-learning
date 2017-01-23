@@ -1,4 +1,5 @@
 import numpy as np
+from PIL import Image
 
 class Skynet:
     def softmax(x):
@@ -21,7 +22,7 @@ class Skynet:
         print('Image set loaded.')
 
     def load_engine_matrix(self, filename='engine.csv'):
-        self.A = np.matrix(np.loadtxt(filename=filename, delimiter=','))
+        self.A = np.matrix(np.loadtxt(filename, delimiter=','))
         print('Loaded engine matrix.')
 
     def save_engine_matrix(self, filename='engine.csv'):
@@ -89,19 +90,24 @@ class Skynet:
                 im = image[0, 1:]
             else:
                 im = image
-            res = Skynet.softmax(self.A@np.array(im).T)
+            res = Skynet.softmax(self.A@np.matrix(im).T)
             res_num = np.argmax(res)
-            result.append(res_num)
+            result.append((res_num, res[res_num]))
         return result
 
 
 # Basic usage example
-sk = Skynet()
-sk.load_image_set(filename='/home/vidd/Downloads/train.csv')
-sk.train(N=1000)
-sk.test(image_set_start=2000, N=1000)
-sk.save_engine_matrix()
-
-test_images = sk.image_set[10000: 10100]
-recognized = sk.recognize(test_images, ignore_first=True) # Ignore first image 'pixel' (in this case label)
-print(recognized)
+if __name__ == '__main__':
+    sk = Skynet()
+    sk.load_engine_matrix()
+    im = list(Image.open('/home/vidd/Desktop/image.png').getdata())
+    im.append(1)
+    print(sk.recognize([im]))
+    # sk.load_image_set(filename='/home/vidd/Downloads/train.csv')
+    # sk.train(N=20000)
+    # sk.test(image_set_start=20000, N=10000)
+    # sk.save_engine_matrix()
+    #
+    # test_images = sk.image_set[30000: 30100]
+    # recognized = sk.recognize(test_images, ignore_first=True) # Ignore first image 'pixel' (in this case label)
+    # print(recognized)
