@@ -92,7 +92,7 @@ class Skynet:
                 im = image
             res = Skynet.softmax(self.A@np.matrix(im).T)
             res_num = np.argmax(res)
-            result.append((res_num, res[res_num]))
+            result.append((res_num, res[res_num, 0]))
         return result
 
 
@@ -104,7 +104,7 @@ if __name__ == '__main__':
     im.append(1)
     print(sk.recognize([im]))
     # sk.load_image_set(filename='/home/vidd/Downloads/train.csv')
-    # sk.train(N=20000)
+    # sk.train(N=20000, E=30)
     # sk.test(image_set_start=20000, N=10000)
     # sk.save_engine_matrix()
     #
