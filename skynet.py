@@ -46,7 +46,7 @@ class Skynet:
         if self.verbose:
             print('Saved engine matrix.')
 
-    def train(self, mbs=100, E=100, learning_rate=1e-6, data_set_start=0, N=None):
+    def train(self, mbs=100, E=100, learning_rate=1e-7, data_set_start=0, N=None):
         if self.data_set is None:
             if self.verbose:
                 print('No image set loaded.')
@@ -129,13 +129,13 @@ class Skynet:
 if __name__ == '__main__':
     sk = Skynet(verbose=True)
     sk.load_engine_matrix()
-    im = list(Image.open('/home/vidd/Desktop/image.png').getdata())
-    im.append(1)
-    print(sk.recognize([im]))
+    # im = list(Image.open('/home/vidd/Desktop/image.png').getdata())
+    # im.append(1)
+    # print(sk.recognize([im]))
     # sk.load_data_set(filename='/home/vidd/Downloads/train.csv')
-    # sk.train(N=20000, E=30)
-    # sk.test(data_set_start=20000, N=10000)
-    # sk.save_engine_matrix()
+    # sk.train(N=39000, E=1,)
+    # sk.test(data_set_start=39000, N=1000)
+    sk.save_engine_matrix()
     #
     # test_images = sk.data_set[30000: 30100]
     # recognized = sk.recognize(test_images, ignore_first=True) # Ignore first image 'pixel' (in this case label)

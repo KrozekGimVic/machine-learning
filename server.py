@@ -31,11 +31,12 @@ class Server(BaseHTTPRequestHandler):
             image = data_dict['image']
 
             Server.sk.load_data_from_string(label, image)
-            Server.sk.train(E=1, mbs=1, learning_rate=1e-8)
+            Server.sk.train(E=1, mbs=1, learning_rate=1e-7)
             Server.save_on += 1
-            if Server.save_on >= 10:
+            if Server.save_on >= 50:
                 Server.sk.save_engine_matrix()
                 Server.save_on = 0
+            self.wfile.write('success\n'.encode('utf-8'))
         except:
             self.wfile.write('Wrong json data.\n'.encode('utf-8'))
 
