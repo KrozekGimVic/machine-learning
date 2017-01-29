@@ -6,23 +6,35 @@ class Skynet:
         e_x = np.exp(x - np.max(x))
         return e_x / e_x.sum(axis=0)
 
-    def __init__(self, verbose=False):
-        self.p = 28**2 + 1
-        self.image_set = None
+    def __init__(self, image_size=28, verbose=False):
+        self.p = image_size**2 + 1
+        self.data_set = None
         self.A = np.zeros((10, self.p))
         self.verbose = verbose
 
-    def load_image_set(self, filename='data.csv', skip_first_line=True):
+    def load_data_set(self, filename='data.csv', skip_first_line=True):
         if self.verbose:
             print('Starting loading image set...')
         skip_rows = 1 if skip_first_line else 0
-        self.image_set = np.matrix(np.loadtxt(filename,
+        self.data_set = np.matrix(np.loadtxt(filename,
                                               dtype=int,
                                               delimiter=',',
                                               skiprows=skip_rows))
-        self.image_set = np.append(self.image_set, [[1] for i in range(len(self.image_set))], axis=1)
+        self.data_set = np.append(self.data_set, [[1] for i in range(len(self.data_set))], axis=1)
         if self.verbose:
             print('Image set loaded.')
+
+    def load_data_from_string(self, label, image_string, delimiter=None):
+        if delimiter is None:
+            array = list(image_string)
+        else:
+            array = image_string.split(delimiter)
+
+        array = [label] + [int(i) for i in array] + [1]
+
+        self.data_set = np.matrix(array)
+        if self.verbose:
+            print('Image loaded.')
 
     def load_engine_matrix(self, filename='engine.csv'):
         self.A = np.matrix(np.loadtxt(filename, delimiter=','))
@@ -34,27 +46,27 @@ class Skynet:
         if self.verbose:
             print('Saved engine matrix.')
 
-    def train(self, mbs=100, E=100, learning_rate=1e-6, image_set_start=0, N=None):
-        if self.image_set is None:
+    def train(self, mbs=100, E=100, learning_rate=1e-6, data_set_start=0, N=None):
+        if self.data_set is None:
             if self.verbose:
                 print('No image set loaded.')
             return
 
         if N is None:
-            N = len(self.image_set)
+            N = len(self.data_set)
 
         if self.verbose:
             print('Starting training...')
 
         for i in range(E):
-            indexes = [j for j in range(image_set_start, image_set_start+N, 1)]
+            indexes = [j for j in range(data_set_start, data_set_start+N, 1)]
             indexes = np.random.permutation(indexes)
             for j in range(0, N, mbs):
                 deltaA = np.zeros((10, self.p))
                 correct = 0
                 for index in indexes[j: j+mbs]:
-                    yk = self.image_set[index, 0]
-                    xk = self.image_set[index, 1:]
+                    yk = self.data_set[index, 0]
+                    xk = self.data_set[index, 1:]
                     res = Skynet.softmax(self.A@xk.T)
                     res_num = np.argmax(res)
                     if res_num == yk:
@@ -71,29 +83,29 @@ class Skynet:
         if self.verbose:
             print('\nTraining completed.')
 
-    def test(self, image_set_start=0, N=None):
-        if self.image_set is None:
+    def test(self, data_set_start=0, N=None):
+        if self.data_set is None:
             if self.verbose:
                 print('No imge set loaded.')
             return
 
         if N is None:
-            N = len(self.image_set)
+            N = len(self.data_set)
 
         if self.verbose:
             print('Starting testing...')
 
         correct = 0
-        for i in range(image_set_start, image_set_start+N, 1):
-            yk = self.image_set[i, 0]
-            xk = self.image_set[i, 1:]
+        for i in range(data_set_start, data_set_start+N, 1):
+            yk = self.data_set[i, 0]
+            xk = self.data_set[i, 1:]
             res = Skynet.softmax(self.A@xk.T)
             res_num = np.argmax(res)
             if res_num == yk:
                 correct += 1
 
-            ratio = int((correct/(i + 1 - image_set_start))*100)
-            progress = int(((i + 1 - image_set_start)/N)*100)
+            ratio = int((correct/(i + 1 - data_set_start))*100)
+            progress = int(((i + 1 - data_set_start)/N)*100)
             if self.verbose:
                 print('\rSuccess rate: {}%\tProgress: ['.format(ratio) + '#'*(progress//5) + ' '*(20-progress//5)+ ']', end='')
 
@@ -120,11 +132,11 @@ if __name__ == '__main__':
     im = list(Image.open('/home/vidd/Desktop/image.png').getdata())
     im.append(1)
     print(sk.recognize([im]))
-    # sk.load_image_set(filename='/home/vidd/Downloads/train.csv')
+    # sk.load_data_set(filename='/home/vidd/Downloads/train.csv')
     # sk.train(N=20000, E=30)
-    # sk.test(image_set_start=20000, N=10000)
+    # sk.test(data_set_start=20000, N=10000)
     # sk.save_engine_matrix()
     #
-    # test_images = sk.image_set[30000: 30100]
+    # test_images = sk.data_set[30000: 30100]
     # recognized = sk.recognize(test_images, ignore_first=True) # Ignore first image 'pixel' (in this case label)
     # print(recognized)

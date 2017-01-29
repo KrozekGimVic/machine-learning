@@ -1,8 +1,12 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib import parse
 import json
+import skynet
 
 class Server(BaseHTTPRequestHandler):
+    sk = skynet.Skynet(image_size=30)
+    save_on = 0
+
     def _set_headers(self):
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
@@ -26,7 +30,12 @@ class Server(BaseHTTPRequestHandler):
             label = data_dict['label']
             image = data_dict['image']
 
-
+            Server.sk.load_data_from_string(label, image)
+            Server.sk.train(E=1, mbs=1, learning_rate=1e-8)
+            Server.save_on += 1
+            if Server.save_on >= 10:
+                Server.sk.save_engine_matrix()
+                Server.save_on = 0
         except:
             self.wfile.write('Wrong json data.\n'.encode('utf-8'))
 
