@@ -6,38 +6,46 @@ class Skynet:
         e_x = np.exp(x - np.max(x))
         return e_x / e_x.sum(axis=0)
 
-    def __init__(self):
+    def __init__(self, verbose=False):
         self.p = 28**2 + 1
         self.image_set = None
         self.A = np.zeros((10, self.p))
+        self.verbose = verbose
 
     def load_image_set(self, filename='data.csv', skip_first_line=True):
-        print('Starting loading image set...')
+        if self.verbose:
+            print('Starting loading image set...')
         skip_rows = 1 if skip_first_line else 0
         self.image_set = np.matrix(np.loadtxt(filename,
                                               dtype=int,
                                               delimiter=',',
                                               skiprows=skip_rows))
         self.image_set = np.append(self.image_set, [[1] for i in range(len(self.image_set))], axis=1)
-        print('Image set loaded.')
+        if self.verbose:
+            print('Image set loaded.')
 
     def load_engine_matrix(self, filename='engine.csv'):
         self.A = np.matrix(np.loadtxt(filename, delimiter=','))
-        print('Loaded engine matrix.')
+        if self.verbose:
+            print('Loaded engine matrix.')
 
     def save_engine_matrix(self, filename='engine.csv'):
         np.savetxt(filename, self.A, delimiter=',')
-        print('Saved engine matrix.')
+        if self.verbose:
+            print('Saved engine matrix.')
 
     def train(self, mbs=100, E=100, learning_rate=1e-6, image_set_start=0, N=None):
         if self.image_set is None:
-            print('No image set loaded.')
+            if self.verbose:
+                print('No image set loaded.')
             return
 
         if N is None:
             N = len(self.image_set)
 
-        print('Starting training...')
+        if self.verbose:
+            print('Starting training...')
+
         for i in range(E):
             indexes = [j for j in range(image_set_start, image_set_start+N, 1)]
             indexes = np.random.permutation(indexes)
@@ -57,18 +65,24 @@ class Skynet:
 
                 ratio = int((correct/mbs) * 100)
                 progress = int((i/E)*100)
-                print('\rSuccess rate: {}%\tProgress: ['.format(ratio) + '#'*(progress//5) + ' '*(20-progress//5) + ']', end='')
-        print('\nTraining completed.')
+                if self.verbose:
+                    print('\rSuccess rate: {}%\tProgress: ['.format(ratio) + '#'*(progress//5) + ' '*(20-progress//5) + ']', end='')
+
+        if self.verbose:
+            print('\nTraining completed.')
 
     def test(self, image_set_start=0, N=None):
         if self.image_set is None:
-            print('No imge set loaded.')
+            if self.verbose:
+                print('No imge set loaded.')
             return
 
         if N is None:
             N = len(self.image_set)
 
-        print('Starting testing...')
+        if self.verbose:
+            print('Starting testing...')
+
         correct = 0
         for i in range(image_set_start, image_set_start+N, 1):
             yk = self.image_set[i, 0]
@@ -80,8 +94,11 @@ class Skynet:
 
             ratio = int((correct/(i + 1 - image_set_start))*100)
             progress = int(((i + 1 - image_set_start)/N)*100)
-            print('\rSuccess rate: {}%\tProgress: ['.format(ratio) + '#'*(progress//5) + ' '*(20-progress//5)+ ']', end='')
-        print('\nTesting completed. Correct rate: {}%'.format(int((correct/N)*100)))
+            if self.verbose:
+                print('\rSuccess rate: {}%\tProgress: ['.format(ratio) + '#'*(progress//5) + ' '*(20-progress//5)+ ']', end='')
+
+        if self.verbose:
+            print('\nTesting completed. Correct rate: {}%'.format(int((correct/N)*100)))
 
     def recognize(self, images, ignore_first=False):
         result = []
@@ -98,7 +115,7 @@ class Skynet:
 
 # Basic usage example
 if __name__ == '__main__':
-    sk = Skynet()
+    sk = Skynet(verbose=True)
     sk.load_engine_matrix()
     im = list(Image.open('/home/vidd/Desktop/image.png').getdata())
     im.append(1)

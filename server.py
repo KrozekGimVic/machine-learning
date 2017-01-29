@@ -25,7 +25,8 @@ class Server(BaseHTTPRequestHandler):
 
             label = data_dict['label']
             image = data_dict['image']
-            print(label, image)
+
+
         except:
             self.wfile.write('Wrong json data.\n'.encode('utf-8'))
 
