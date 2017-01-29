@@ -14,12 +14,12 @@ class Server(BaseHTTPRequestHandler):
 
     def do_GET(self):
         self._set_headers()
-        self.wfile.write('Not implemented yet.\n'.encode('utf-8'))
+        self.wfile.write('Not implemented yet.'.encode('utf-8'))
 
     def do_POST(self):
         self._set_headers()
         if self.path != '/upload_image':
-            self.wfile.write('Wrong url.\n'.encode('utf-8'))
+            self.wfile.write('Wrong url.'.encode('utf-8'))
             return
 
         try:
@@ -36,9 +36,10 @@ class Server(BaseHTTPRequestHandler):
             if Server.save_on >= 50:
                 Server.sk.save_engine_matrix()
                 Server.save_on = 0
-            self.wfile.write('success\n'.encode('utf-8'))
+            print(label, Server.save_on)
+            self.wfile.write('success'.encode('utf-8'))
         except:
-            self.wfile.write('Wrong json data.\n'.encode('utf-8'))
+            self.wfile.write('Wrong json data.'.encode('utf-8'))
 
 def run():
     server_address = ('', 8000)
