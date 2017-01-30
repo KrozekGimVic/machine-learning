@@ -2,7 +2,7 @@ import numpy as np
 from PIL import Image
 
 class Skynet:
-    @static_method
+    @staticmethod
     def softmax(x):
         e_x = np.exp(x - np.max(x))
         return e_x / e_x.sum(axis=0)
@@ -133,7 +133,7 @@ if __name__ == '__main__':
     # im = list(Image.open('/home/vidd/Desktop/image.png').getdata())
     # im.append(1)
     # print(sk.recognize([im]))
-    # sk.load_data_set(filename='/home/vidd/Downloads/train.csv')
+    # sk.load_data_set(filename='train.csv')
     # sk.train(N=39000, E=1,)
     # sk.test(data_set_start=39000, N=1000)
     sk.save_engine_matrix()
