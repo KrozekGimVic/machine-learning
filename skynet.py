@@ -2,6 +2,7 @@ import numpy as np
 from PIL import Image
 
 class Skynet:
+    @static_method
     def softmax(x):
         e_x = np.exp(x - np.max(x))
         return e_x / e_x.sum(axis=0)
