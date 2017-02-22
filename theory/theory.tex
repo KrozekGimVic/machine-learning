@@ -1,0 +1,39 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage[slovene]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+
+\newcommand{\R}{\mathbb{R}}
+
+\begin{document}
+	\begin{titlepage}
+		\hbox{
+			\hspace*{0.2\textwidth}
+			\rule{1pt}{\textheight}
+			\hspace*{0.05\textwidth}
+			\parbox[b]{0.75\textwidth}{
+				{\noindent\Huge\bfseries Machine \\[0.5\baselineskip] Learning}\\[2\baselineskip]
+				{\large \textit{Learning machine learning}}\\[4\baselineskip]
+				\vspace{0.5\textheight}
+			}
+		}
+	\end{titlepage}
+
+	\thispagestyle{empty}
+	\tableofcontents
+	\newpage
+	\setcounter{page}{1}
+	
+	\include{vektorji_matrike_norme/vektorji_matrike_norme}
+\end{document}
