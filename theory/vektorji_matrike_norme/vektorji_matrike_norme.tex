@@ -1,12 +1,12 @@
 \section{Vektorji, Matrike in Norme} 
-
-\paragraph{def:} Vektorski prostor je četverica ($V, O, +, \cdot$), kjer je:\\
+\subsection{Vektorski prostor}
+\paragraph{Definicija:} Vektorski prostor je četverica ($V, O, +, \cdot$), kjer je:\\
 \indent $V \dots$ množica vektorjev\\
 \indent $O \dots$ obseg skalarjev\\
 \indent $+ \dots$ dvomestna operacija $+: V \times V \rightarrow V$\\
 \indent $\cdot \dots$ produkt s skalarjem $\cdot: O \times V \rightarrow V$\\
 
-\paragraph{kjer:}\ \\
+\paragraph{Kjer:}\ \\
 \indent $\forall x, y, z$\indent 
 \begin{minipage}{0.5\textwidth}
 	$x + (y + z) = (x + y) + z$\\
@@ -28,3 +28,67 @@
 \indent $(\mathbb{C}[x], \mathbb{C}, \cdot, \cdot)$\\
 \indent $(\R[x], \mathbb{C}, +, \cdot) // \indent (5x + 4)i \rightarrow 5xi + 4i \notin \R[x]$\\
 \indent $(\R \rightarrow \R, \R, +, \cdot)$
+
+\subsection{Skalarni produkt}
+\paragraph{Definicija:} Skalarni produkt nad realnim vektorskim prostorom $(V, \R, +, \cdot)$ je preslikava $:<\cdot , \cdot >: V\times V \rightarrow \R$ in velja:\\
+\indent $\forall x, y:\ <x, y> = <y, x>$\\
+\indent $\forall x,y,z:\ <x, y+z> = <x,y> + <x, z>$\\
+\indent $\forall x:\ <x, x> \geq 0$\\
+\indent $\forall x:\ <x, x> = 0 \Rightarrow x=0$\\
+\indent $<x, y> = 0 \Rightarrow$ pravokotna
+
+\paragraph{Primer:} najdi skalarni produkt nad $\R^3$\\
+\indent $<(a_1, a_2, a_3), (b_1, b_2, b_3)> = a_1b_1 + a_2b_2 + a_3b_3$\\
+\indent $<v, u> = \sum_{i=1}^{n}v_iu_i$
+
+
+\subsection{Transponiranje}
+$(A^T)_{ij} = a_{ji}$
+
+\subsection{Sled} 
+\paragraph{def:} $sl(A) = \sum a_{ii}$\\
+\indent $<A, B> = sl(A^TB)$\\
+\indent $sl(A^T) = sl(A)$\\
+\indent $sl(AB) = sl(BA)$
+
+\paragraph{Dokaz:}
+\[ sl(AB) = \sum_{i}(AB)_{ii} = \sum_i \sum_k a_{ik}b_{ki} = \sum_k \sum_i b_{ki}a_{ik} = \sum_k (BA)_{kk} = sl(BA)\]
+
+\subsection{Norme}
+\paragraph{Definicija:} Norma na realnem prostoru $V$ je preslikava $||\cdot||:\ V \rightarrow \R$ za katero velja:\\
+\indent $\forall x \in V:\ ||x|| \geq 0$\\
+\indent $\forall x \in V:\ ||x|| = 0 \Rightarrow x=0$\\
+\indent $||x + y|| \leq ||x|| + || y || $\\
+\indent $\forall \lambda \in V:\ ||\lambda \cdot x|| = |\lambda| \cdot ||x||$
+
+\paragraph{Primeri:}\ \\
+\indent $||x||_2 = \sqrt{<x, x>} = \sqrt{\sum x_i^2}$\\
+\indent $||x||_1 = \sum |x_i|$\\
+\indent $||x||_p = \sqrt[p]{\sum x_i^p}$\\
+\indent $||x||_\infty = \lim_{p\rightarrow \infty}||x||_p = \max \{|x_i|\}$
+
+\paragraph{Dokaz:}
+\[\begin{split} \lim_{p\rightarrow \infty} \sqrt[p]{x_1^p + \dots + x_n^p} = 
+\lim_{p\rightarrow \infty} \sqrt[p]{\frac{x_1^p + \dots + x_n^p}{\max\{|x_i|\}^p}}  \cdot \max \{|x_i|\} =\\
+=\max\{|x_i|\}\cdot \lim_{p\rightarrow \infty} \sqrt[p]{(\frac{x_1}{m})^p + \dots + (\frac{x_n}{m})^p} = \max \{|x_i|\}\end{split}\]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
