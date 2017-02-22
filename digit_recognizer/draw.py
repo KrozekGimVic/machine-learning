@@ -1,7 +1,7 @@
 import tkinter as tk
 from PIL import Image
 import io
-from skynet import Skynet
+from .skynet import Skynet
 
 width = 280
 height = 280
