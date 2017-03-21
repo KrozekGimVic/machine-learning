@@ -1,7 +1,7 @@
 import tkinter as tk
 from PIL import Image
 import io
-from .skynet import Skynet
+from skynet import Skynet
 
 width = 280
 height = 280
@@ -32,7 +32,7 @@ def recognize():
     ps = drawing_area.postscript(colormode='color')
     img = Image.open(io.BytesIO(ps.encode('utf-8')))
     img.thumbnail((28, 28), Image.ANTIALIAS)
-    img.save('image.png')
+    img.save('image.png')    
     image_data = img.getdata()
 
     image_vector = [0 for i in range(28 * 28 + 1)]

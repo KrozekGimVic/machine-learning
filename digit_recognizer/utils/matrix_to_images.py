@@ -18,7 +18,6 @@ for _ in range(10):
                 color = (-val, 0, 0)
             else:
                 color = (0, val, 0)
-            print(val)
             new_image_data.putpixel((i, j + 28*_), color)
 
 new_image.save('image.png')
